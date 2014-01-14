@@ -1,0 +1,8 @@
+#!/bin/csh -f
+
+set word=$1
+
+# lynx is a text-based browser 
+# available free on the web/net.
+lynx -cfg=/dev/null -dump "\
+http://www.dictionary.com/cgi-bin/dict.pl?term=${word}" | more
