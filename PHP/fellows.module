@@ -1,0 +1,55 @@
+<?php
+/**
+ * @file
+ * Code for the fellows feature.
+ */
+
+function fellows_data() {
+
+  // Get view object programmatically.
+  $view = views_get_view('fellows_mosaic');
+  // Builds view info (most importantly filters).
+  $view->build();
+  // Sets the dom_id for the rendering and theming.
+  $view->pre_execute();
+  // Runs query.
+  $view->execute();
+
+  // We don't need the html, we just want the rendered fields.
+  $view->render();
+  $rows = array();
+
+
+  //    ,{'lat':31.791702, 'long':-7.092620, 'type':'women', 'title':'xxx', 'text':'www', 'photo_url': 'i/_t_photo.png', 'profile_url':'http://...'}
+  foreach ($view->style_plugin->rendered_fields as $fields) {
+    // Images are only output as <img> tags, so filter that out.
+    $name = array();
+    if (isset($fields['field_first_name'])) {
+      $name[] = $fields['field_first_name'];
+    }
+    if (isset($fields['field_middle_name'])) {
+      $name[] = $fields['field_middle_name'];
+    }
+    if (isset($fields['field_last_name'])) {
+      $name[] = $fields['field_last_name'];
+    }
+    $person_image = $fields['field_person_picture'];
+
+    // If there is no image, it will just be a blank overlay, but we can't
+    // just check if it's blank or not.
+    if (strpos($person_image, 'headshotoverlay') !== false) {
+      continue;
+    }
+    preg_match('/\<img\ src=\"([^"]*)\"/', $person_image, $person_matches);
+    $rows[] = array(
+      'name' => join(' ', $name),
+      'title' => $fields['title'],
+      'person_photo_url' => isset($person_matches[1]) ? $person_matches[1] : '',
+      'profile_url' => 'http://...',
+      'link' => url('node/' . $fields['nid']),
+      'text' => 'test',
+    );
+  }
+
+  return $rows;
+}

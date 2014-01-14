@@ -1,0 +1,56 @@
+<?php
+
+function dotmap_block_info() {
+
+  $blocks['dotmap'] = array(
+    'info' => t('RP Dot map'),
+  );
+
+  return $blocks;
+}
+
+function dotmap_block_view($delta = 0) {
+
+  $block = array();
+
+  switch ($delta) {
+    case 'dotmap':
+      $block['content'] = dotmap_html();
+    break;
+  }
+
+  return $block;
+}
+
+function dotmap_html() {
+
+  $dotmap = drupal_get_path('module', 'dotmap');
+  drupal_add_css($dotmap . '/dotmap.css');
+  drupal_add_js($dotmap . '/dotmap.js');
+  drupal_add_js(array('dotmap' => $dotmap), 'setting');
+
+  drupal_add_js(array('fellows' => fellows_data()), 'setting');
+  drupal_add_js(array('ventures' => ventures_data()), 'setting');
+
+  return '
+	<div class="wrapper">
+		<div class="map_wrapper">
+			<div id="dotmap-map" class="dotmap-map">
+				<img class="switch" src="/' . $dotmap . '/i/map_btn_map.png" />
+				<div class="menu">
+					<ul>
+						<li class="health" __type="health">Health</li>
+						<li class="water" __type="water">Water</li>
+						<li class="environment" __type="environment">Environment</li>
+						<li class="education" __type="education">Education</li>
+						<li class="women" __type="women">Womens\' Rights/Health</li>
+					</ul>
+				</div> <!-- end menu -->
+			</div> <!-- end map -->
+		</div> <!-- end map_wrapper -->
+		<div class="mosaic_wrapper hidden">
+			<div id="dotmap-mosaic" class="dotmap-mosaic"></div>
+		</div>
+	</div> <!-- end wrapper -->
+  ';
+}
