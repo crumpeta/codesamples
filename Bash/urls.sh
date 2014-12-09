@@ -1,5 +1,8 @@
  #!/bin/bash
 
+# Take 3 images from an affiliate directory, concatenate them and create a single image that 
+# contains all 3 source images. 
+
 
 offers=$(ls /Users/alan/va/site/test/www/include/partners/);
 site=veteransadvantage
